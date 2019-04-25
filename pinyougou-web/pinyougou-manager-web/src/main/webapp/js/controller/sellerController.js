@@ -5,7 +5,7 @@ app.controller('sellerController', function($scope, $controller, baseService){
     $controller('baseController',{$scope:$scope});
 
     /** 查询条件对象 */
-    $scope.searchEntity = {status : '0'};
+    $scope.searchEntity = {};
     /** 分页查询(查询条件) */
     $scope.search = function(page, rows){
         baseService.findByPage("/seller/findByPage", page,
@@ -38,17 +38,6 @@ app.controller('sellerController', function($scope, $controller, baseService){
         });
     };
 
-
-
-
-
-
-
-
-
-
-
-
     /** 添加或修改 */
     $scope.saveOrUpdate = function(){
         var url = "save";
@@ -67,8 +56,6 @@ app.controller('sellerController', function($scope, $controller, baseService){
             });
     };
 
-
-
     /** 批量删除 */
     $scope.delete = function(){
         if ($scope.ids.length > 0){
@@ -76,7 +63,7 @@ app.controller('sellerController', function($scope, $controller, baseService){
                 .then(function(response){
                     if (response.data){
                         /** 重新加载数据 */
-                        $scope.reload();
+                        $scope.reloreloadad();
                     }else{
                         alert("删除失败！");
                     }
@@ -85,4 +72,5 @@ app.controller('sellerController', function($scope, $controller, baseService){
             alert("请选择要删除的记录！");
         }
     };
+
 });

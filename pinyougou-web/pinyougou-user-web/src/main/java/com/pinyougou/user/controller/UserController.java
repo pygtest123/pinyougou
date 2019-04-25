@@ -1,9 +1,15 @@
 package com.pinyougou.user.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.pinyougou.pojo.Areas;
+import com.pinyougou.pojo.Cities;
+import com.pinyougou.pojo.Provinces;
 import com.pinyougou.pojo.User;
 import com.pinyougou.service.UserService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户控制器
@@ -47,4 +53,21 @@ public class UserController {
         return false;
     }
 
+    /** 查询省份信息 */
+    @GetMapping("/findProvinces")
+    public List<Provinces> findProvinces(){
+        return userService.findProvinces();
+    }
+
+    /** 根据省份ID查询城市名称 */
+    @GetMapping("/findCityByParentId")
+    public List<Cities> findCityByParentId(Long parentId){
+            return userService.findCityByParentId(parentId);
+    }
+
+    /** 根据父级cityId查询,得到区级分类名称 */
+    @GetMapping("/findAreaByCityId")
+    public List<Areas> findAreaByCityId(Long cityId){
+        return userService.findAreaByCityId(cityId);
+    }
 }

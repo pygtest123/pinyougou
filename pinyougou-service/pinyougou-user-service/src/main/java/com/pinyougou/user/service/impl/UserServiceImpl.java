@@ -4,6 +4,9 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.pinyougou.common.util.HttpClientUtils;
 import com.pinyougou.mapper.UserMapper;
+import com.pinyougou.pojo.Areas;
+import com.pinyougou.pojo.Cities;
+import com.pinyougou.pojo.Provinces;
 import com.pinyougou.pojo.User;
 import com.pinyougou.service.UserService;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -129,5 +132,29 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(ex);
         }
     }
+
+    /** 查询省份信息 */
+    public List<Provinces> findProvinces(){
+            return userMapper.findProvinces();
+    }
+
+    /** 根据省份ID查询城市名称 */
+    @Override
+    public List<Cities> findCityByParentId(Long parentId) {
+        try {
+           return userMapper.findCityByParentId(parentId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /** 根据父级cityId查询,得到区级分类名称 */
+    @Override
+    public List<Areas> findAreaByCityId(Long cityId) {
+        return userMapper.findAreaByCityId(cityId);
+    }
+
+
 
 }

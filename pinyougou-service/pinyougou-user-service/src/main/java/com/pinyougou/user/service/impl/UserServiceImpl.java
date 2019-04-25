@@ -130,4 +130,35 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+
+    // 更新用户密码
+    @Override
+    public User updatePassword(String userName, String newPassword) {
+        try {
+            User user = new User();
+            user.setUsername(userName);
+            User user1 = userMapper.selectOne(user);
+
+            user1.setPassword(DigestUtils.md5Hex(newPassword));
+            userMapper.updateByPrimaryKeySelective(user1);
+
+            return user1;
+        } catch (Exception e){
+           throw  new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public User UserInfo(String userName) {
+        try {
+            User user = new User();
+            user.setUsername(userName);
+            return userMapper.selectOne(user);
+
+        } catch (Exception e){
+           throw new RuntimeException(e);
+        }
+
+    }
+
 }

@@ -71,7 +71,8 @@
 			<h4>全部商品<span>11</span></h4>
 			<div class="cart-main">
 				<div class="yui3-g cart-th">
-					<div class="yui3-u-1-4"><input type="checkbox" name="" value="" /> 全部</div>
+					<div class="yui3-u-1-4"><input type="checkbox"  ng-click="checkAll($event)"
+												   ng-checked="ckAll"/> 全部</div>
 					<div class="yui3-u-1-4">商品</div>
 					<div class="yui3-u-1-8">单价（元）</div>
 					<div class="yui3-u-1-8">数量</div>
@@ -81,15 +82,20 @@
 				<!-- 迭代产生商家 -->
 				<div class="cart-item-list" ng-repeat="cart in carts">
 					<div class="cart-shop">
-						<input type="checkbox" name="" value="" />
+						<input type="checkbox"
+						ng-check="ck1"
+						ng-click="check1()"/>
 						<span class="shopname self">{{cart.sellerName}}</span>
 					</div>
 					<div class="cart-body">
 						<!-- 迭代产生商家的商品 -->
 						<div class="cart-list" ng-repeat="orderItem in cart.orderItems">
+							{{orderItem.itemId}}
 							<ul class="goods-list yui3-g">
 								<li class="yui3-u-1-24">
-									<input type="checkbox" name="" value="" />
+									<input type="checkbox"
+										   ng-checked="ck2"
+										   ng-click="check2()"/>
 								</li>
 								<li class="yui3-u-11-24">
 									<div class="good-item">
@@ -127,7 +133,10 @@
 			</div>
 			<div class="cart-tool">
 				<div class="select-all">
-					<input type="checkbox" name="" value="" />
+					<input type="checkbox"
+						   ng-click="checkAll($event)"
+						   ng-checked="ckAll"
+						   name="" value="" />
 					<span>全选</span>
 				</div>
 				<div class="option">

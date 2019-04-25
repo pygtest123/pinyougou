@@ -46,7 +46,6 @@ public class ItemMessageListener implements SessionAwareMessageListener<ObjectMe
             List<SolrItem> solrItems = new ArrayList<>();
             // 迭代SKU数据
             for (Item item1 : itemList) {
-
                 SolrItem solrItem = new SolrItem();
                 solrItem.setId(item1.getId());
                 solrItem.setTitle(item1.getTitle());
@@ -61,7 +60,7 @@ public class ItemMessageListener implements SessionAwareMessageListener<ObjectMe
                 // 动态域 {"网络":"移动4G","机身内存":"64G"}
                 String spec = item1.getSpec();
                 // 转化成Map集合
-                Map<String, String> specMap = JSON.parseObject(spec, Map.class);
+                Map<String,String> specMap = JSON.parseObject(spec,Map.class);
                 solrItem.setSpecMap(specMap);
 
                 solrItems.add(solrItem);

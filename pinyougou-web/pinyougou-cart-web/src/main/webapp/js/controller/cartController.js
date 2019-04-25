@@ -1,15 +1,25 @@
 // 定义购物车的控制器
-app.controller('cartController', function ($scope, $controller, baseService) {
+app.controller('cartController', function ($scope,$controller,baseService) {
 
     // 继承baseController
     $controller('baseController', {$scope : $scope});
-
     // 查询购物车
+
+    //默认全选
+    $scope.ckAll = true;
+    $scope.ck1 = true;
+    $scope.ck2 = true;
+    //全选的方法
+    $scope.checkAll = function ($event) {
+        //判断是否选中
+        if($event.target.checked){//选中
+            $scope.ck1 = true;
+        }
+    };
     $scope.findCart = function () {
         baseService.sendGet("/cart/findCart").then(function(response){
             // 获取响应数据
             $scope.carts = response.data;
-
             // 定义json对象封装统计的数据
             $scope.totalEntity = {totalNum : 0, totalMoney : 0};
             // 迭代用户的购物车集合
@@ -20,12 +30,10 @@ app.controller('cartController', function ($scope, $controller, baseService) {
                 for (var j = 0; j < cart.orderItems.length; j++){
                     // 获取购买的商品
                     var orderItem = cart.orderItems[j];
-
                     // 统计购买数量
                     $scope.totalEntity.totalNum += orderItem.num;
                     // 统计总金额
                     $scope.totalEntity.totalMoney += orderItem.totalFee;
-
                 }
             }
         });

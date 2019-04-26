@@ -57,5 +57,18 @@ app.controller('settingController', function ($scope, $controller, $http, baseSe
 
     };
 
+    /** 定义发送短信验证码方法 */
+    $scope.sendCode = function () {
+        if ($scope.user.phone){
+            baseService.sendGet("/user/sendCode?phone="
+                + $scope.user.phone)
+                .then(function(response){
+                    alert(response.data ? "发送成功！" : "发送失败！");
+                });
+        }else {
+            alert("请输入手机号码！");
+        }
+    };
+
 
 });

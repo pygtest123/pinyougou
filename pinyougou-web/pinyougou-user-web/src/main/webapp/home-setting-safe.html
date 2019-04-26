@@ -413,11 +413,13 @@
 										<input name="msgcode" type="text" id="msgcode">
 									</div>
 									<div class="controls">
-										<button class="sui-btn btn-info">发送</button>
+										<button class="sui-btn btn-info"  ng-click="sendCode()">发送</button>
 									</div>
 								</div>
 								<div class="control-group next-btn">
-									<a class="sui-btn btn-primary" href="home-setting-address-phone.html">下一步</a>
+									<a class="sui-btn btn-primary"
+									   ng-cilck="check()"
+									   href="{{result}}">下一步</a>
 								</div>
 							</form>
 						</div>

@@ -21,12 +21,13 @@
 		<script src="/js/service/baseService.js"></script>
 		<script src="/js/controller/baseController.js"></script>
 		<script src="/js/controller/sellerController.js"></script>
-	    
+
 	</head>
 
 	<body ng-app="pinyougou"
 		  ng-controller="sellerController"
-		  class="hold-transition skin-red sidebar-mini"  >
+		  class="hold-transition skin-red sidebar-mini"
+		  ng-init="searchEntity = {status : '0'}">
   		<!-- .box-body -->
 		<div class="box box-primary">
 			<div class="box-header with-border">

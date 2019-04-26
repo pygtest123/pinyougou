@@ -1,10 +1,9 @@
 package com.pinyougou.pojo;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
-import javax.persistence.*;
 
 @Table(name="tb_order")
 public class Order implements Serializable{
@@ -261,4 +260,6 @@ public class Order implements Serializable{
     public void setSellerId(String sellerId) {
         this.sellerId = sellerId == null ? null : sellerId.trim();
     }
+
+
 }

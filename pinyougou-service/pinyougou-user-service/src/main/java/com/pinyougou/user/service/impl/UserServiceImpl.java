@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.io.Serializable;
 import java.util.*;
@@ -155,7 +156,37 @@ public class UserServiceImpl implements UserService {
         return userMapper.findAreaByCityId(cityId);
     }
 
+    /**　完善用户信息添加到tb_user表中　*/
+    @Override
+    public boolean savePersonToUser(User user) {
+        try {
+            //创建条件对象
+            Example example = new Example(User.class);
+            Example.Criteria criteria = example.createCriteria();
+            //创建条件
+            criteria.andEqualTo("username",user.getUsername());
 
+            //判断数据库表是否存在用户地址字段
+            int row = userMapper.isExists("address");
+            if (row == 0){//表中没有该字段
+                //动态添加字段
+                userMapper.saveColumnName("address");
+            }
+
+            //判断数据库表是否存在用户职业字段
+            int num = userMapper.isExists("profession");
+            if (num == 0){//表中没有该字段
+                //动态添加字段
+                userMapper.saveColumnName("profession");
+            }
+            //执行修改,完善个人信息
+            userMapper.updateByExampleSelective(user,example);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 
     // 更新用户密码

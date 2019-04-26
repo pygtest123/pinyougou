@@ -177,7 +177,9 @@ $(function(){
                 <div class="yui3-u-1-6 list">
 
                     <div class="person-info">
-                        <div class="person-photo"><img src="img/_/photo.png" alt=""></div>
+                        <div class="person-photo">
+							<img width="50px" height="40px" src="{{user.headPic}}" alt="">
+						</div>
                         <div class="person-account">
                             <span class="name">Michelle</span>
                             <span class="safe">账户安全</span>
@@ -222,7 +224,7 @@ $(function(){
                                     <div class="control-group">
                                         <label for="inputName" class="control-label">昵称：</label>
                                         <div class="controls">
-                                            <input type="text" ng-model="user.inputName" id="inputName" placeholder="昵称">
+                                            <input type="text" ng-model="user.nickName" id="inputName" placeholder="昵称">
                                         </div>
                                     </div>
                                     <div class="control-group">
@@ -316,7 +318,9 @@ $(function(){
                                     <div class="control-group">
                                         <label  class="control-label"></label>
                                         <div class="controls">
-                                            <button type="submit" class="sui-btn btn-primary">保存</button>
+                                            <button type="submit"
+                                                    ng-click="savePersonToUser();"
+                                                    class="sui-btn btn-primary">保存</button>
                                         </div>
                                     </div>
                                 </form>
@@ -326,10 +330,14 @@ $(function(){
                                 <div class="new-photo">
                                     <p>当前头像：</p>
                                     <div class="upload">
-                                        <img id="imgShow_WU_FILE_0" width="100" height="100" src="img/_/photo_icon.png" alt="">
-                                        <input type="file" id="up_img_WU_FILE_0" />
+										<tr>
+											<td><img id="imgShow_WU_FILE_0" width="200px" height="200px" src="{{user.headPic}}" ></td>
+										</tr>
+										<input type="file" id="file"/>
+										<button class="btn btn-primary"
+												ng-click="uploadFile();"
+												type="button">上传</button>
                                     </div>
-
                                 </div>
                             </div>
                         </div>

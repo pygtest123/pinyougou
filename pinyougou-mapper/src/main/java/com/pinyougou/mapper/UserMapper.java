@@ -9,7 +9,6 @@ import org.apache.ibatis.annotations.Select;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * UserMapper 数据访问接口
@@ -29,4 +28,11 @@ public interface UserMapper extends Mapper<User>{
     /** 根据父级cityId查询,得到区级分类名称 */
     @Select("select * from tb_areas where cityId = #{cityId}")
     List<Areas> findAreaByCityId(Long cityId);
+
+    /** 判断数据库表是否存在字段 */
+    int isExists(@Param("columnName") String columnName);
+
+    /** 添加字段 */
+    void saveColumnName(@Param("columnName") String columnName);
+
 }

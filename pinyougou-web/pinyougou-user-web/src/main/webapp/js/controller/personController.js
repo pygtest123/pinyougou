@@ -72,7 +72,30 @@ app.controller('personController', function($scope,baseService){
             $scope.user.sex = sex;
     };
 
+    /** 保存按钮点击事件,保存个人信息 */
+    $scope.savePersonToUser = function () {
+        baseService.sendPost('/user/savePersonToUser' ,$scope.user).then(function (response) {
+            if(response.data){
+                //保存成功,跳转首页
+                location.href="http://user.pinyougou.com";
+            }else {
+                alert("完善信息失败,请重试!");
+            }
+        });
+    };
 
-
+    /** 定义文件上传 */
+    $scope.uploadFile = function () {
+        // 调用服务层上传文件
+        baseService.uploadFile().then(function(response){
+            // 获取响应数据 {status : 200, url : 'http://192.168.12.131/group1/xxx/xx/x.jpg'}
+            if(response.data.status == 200){
+                // 获取图片url $scope.picEntity : {url : '', color:''}
+                $scope.user.headPic = response.data.url;
+            }else{
+                alert("上传失败！");
+            }
+        });
+    };
 
 });

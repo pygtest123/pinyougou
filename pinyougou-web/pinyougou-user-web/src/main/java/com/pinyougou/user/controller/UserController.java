@@ -6,7 +6,8 @@ import com.pinyougou.pojo.Cities;
 import com.pinyougou.pojo.Provinces;
 import com.pinyougou.pojo.User;
 import com.pinyougou.service.UserService;
-import org.springframework.security.access.method.P;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,8 +15,6 @@ import java.util.Map;
 
 /**
  * 用户控制器
- *
- * @author lee.siu.wah
  * @version 1.0
  * <p>File Created at 2019-04-15<p>
  */
@@ -72,6 +71,25 @@ public class UserController {
         return userService.findAreaByCityId(cityId);
     }
 
+
+    /**　完善用户信息添加到tb_user表中　*/
+    @PostMapping("/savePersonToUser")
+    public boolean savePersonToUser(@RequestBody User user){
+        try {
+            //获取登录的用户名
+            // 获取安全上下文对象
+            SecurityContext context = SecurityContextHolder.getContext();
+            String username = context.getAuthentication().getName();
+
+            //设置用户名
+            user.setUsername(username);
+
+          return   userService.savePersonToUser(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     // 更新用户密码
 

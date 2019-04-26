@@ -19,4 +19,5 @@
             <property name="rowBoundsWithCount" value="true"/>
         </plugin>
     </plugins>
+
 </configuration>

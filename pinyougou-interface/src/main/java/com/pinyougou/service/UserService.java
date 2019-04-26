@@ -7,7 +7,6 @@ import com.pinyougou.pojo.User;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 /**
  * UserService 服务接口
@@ -58,4 +57,7 @@ public interface UserService {
 
 	/** 根据父级cityId查询,得到区级分类名称 */
 	List<Areas> findAreaByCityId(Long cityId);
+
+	/**　完善用户信息添加到tb_user表中　*/
+    boolean savePersonToUser(User user);
 }

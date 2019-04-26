@@ -20,12 +20,42 @@ app.controller('sellerController', function($scope, $controller, baseService){
     };
 
 
+    /** 查询商家信息 */
+    $scope.findSeller=function () {
+        baseService.sendGet("/seller/findSeller").then(function (response) {
+            $scope.entity = response.data;
+        });
+    };
 
+    /** 保存修改后商家的信息*/
+    $scope.update = function () {
+        baseService.sendPost("/seller/update",$scope.entity).then(function (response) {
+            if (response.data){
+                alert("修改成功!");
+            } else{
+                alert("修改失败!");
+            }
+        });
+    };
 
+    /** 修改商家密码 */
+    $scope.updatePassword = function () {
 
+        if ($scope.entity.newPassword == $scope.password){
+            baseService.sendPost("/seller/updatePassword",$scope.entity).then(function (response) {
+                if (response.data){
+                    alert("修改成功!");
+                    /** 跳转到登录页面 */
+                    location.href = "/shoplogin.html";
+                } else{
+                    alert("修改失败!");
+                }
+            });
+        }else {
+            alert("两次密码不一致!");
+        }
 
-
-
+    };
 
 
 
@@ -46,7 +76,7 @@ app.controller('sellerController', function($scope, $controller, baseService){
     /** 分页查询(查询条件) */
     $scope.search = function(page, rows){
         baseService.findByPage("/seller/findByPage", page,
-			rows, $scope.searchEntity)
+            rows, $scope.searchEntity)
             .then(function(response){
                 /** 获取分页查询结果 */
                 $scope.dataList = response.data.rows;
@@ -57,8 +87,9 @@ app.controller('sellerController', function($scope, $controller, baseService){
 
     /** 显示修改 */
     $scope.show = function(entity){
-       /** 把json对象转化成一个新的json对象 */
-       $scope.entity = JSON.parse(JSON.stringify(entity));
+        /** 把json对象转化成一个新的json对象 */
+        $scope.entity = JSON.parse(JSON.stringify(entity));
+
     };
 
     /** 批量删除 */

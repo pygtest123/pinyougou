@@ -1,10 +1,11 @@
 package com.pinyougou.service;
 
+import com.pinyougou.common.pojo.PageResult;
 import com.pinyougou.pojo.Order;
 import com.pinyougou.pojo.PayLog;
 
-import java.util.List;
 import java.io.Serializable;
+import java.util.List;
 /**
  * OrderService 服务接口
  * @date 2019-03-28 09:58:00
@@ -31,7 +32,7 @@ public interface OrderService {
 	List<Order> findAll();
 
 	/** 多条件分页查询 */
-	List<Order> findByPage(Order order, int page, int rows);
+	PageResult findByPage(Order order, int page, int rows);
 
 	/** 从Redis数据库中获取支付日志 */
     PayLog findPayLogFromRedis(String userId);

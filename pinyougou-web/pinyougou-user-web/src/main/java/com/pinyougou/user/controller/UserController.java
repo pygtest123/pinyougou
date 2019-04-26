@@ -6,6 +6,7 @@ import com.pinyougou.pojo.Cities;
 import com.pinyougou.pojo.Provinces;
 import com.pinyougou.pojo.User;
 import com.pinyougou.service.UserService;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -70,4 +71,38 @@ public class UserController {
     public List<Areas> findAreaByCityId(Long cityId){
         return userService.findAreaByCityId(cityId);
     }
+
+
+    // 更新用户密码
+
+    @PostMapping("/updatePassword")
+    public boolean updatePassword(@RequestBody Map<String,String> updateUserPassword){
+        try {
+
+            userService.updatePassword(updateUserPassword.get("userName"),updateUserPassword.get("newPassword"));
+            return true;
+
+        } catch (Exception e){
+           e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+    // 获取用户号码
+    @PostMapping("/UserInfo")
+    @ResponseBody
+    public User UserInfo(String userName){
+        try {
+
+            User user = userService.UserInfo(userName);
+            return user;
+        } catch (Exception e){
+          throw new RuntimeException(e);
+        }
+
+
+    }
+
 }

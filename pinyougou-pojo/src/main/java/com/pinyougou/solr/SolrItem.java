@@ -38,7 +38,7 @@ public class SolrItem implements Serializable {
     /** 动态域 */
     @Dynamic
     @Field("spec_*")
-    private Map<String, String> specMap;
+    private Map<String,String> specMap;
 
     /** setter and getter method */
     public Long getId() {

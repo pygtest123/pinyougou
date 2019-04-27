@@ -226,6 +226,7 @@
                                 <td>{{a.mobile}}</td>
                                 <td>
                                     <a data-toggle="modal" data-target=".edit" data-keyboard="false"
+                                       ng-click="findOne(a.id);findProvinces();"
                                        class="sui-btn  btn-info add-new">编辑</a>
                                     <a ng-if="a.isDefault == 0" ng-click="deleteAddress(a.id);"
                                        class="sui-btn  btn-info add-new">删除</a>
@@ -242,7 +243,9 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" data-dismiss="modal" aria-hidden="true" class="sui-close">×
+                                    <button type="button" data-dismiss="modal"
+                                            ng-click="clearText();"
+                                            aria-hidden="true" class="sui-close">×
                                     </button>
                                     <h4 id="myModalLabel"  class="modal-title">新增地址</h4>
                                 </div>
@@ -283,7 +286,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {{newAddress}}
                                         <div class="control-group">
                                             <label class="control-label">详细地址：</label>
                                             <div class="controls">
@@ -317,8 +319,9 @@
                                     </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" ng-click="saveAddress();" data-ok="modal" class="sui-btn btn-primary btn-large">确定</button>
-                                    <button type="button" data-dismiss="modal" class="sui-btn btn-default btn-large">取消</button>
+                                    <button type="button" ng-click="saveOrUpdateAddress();" data-ok="modal" class="sui-btn btn-primary btn-large">确定</button>
+                                    <button type="button" ng-click="clearText();"
+                                            data-dismiss="modal" class="sui-btn btn-default btn-large">取消</button>
                                 </div>
                             </div>
                         </div>

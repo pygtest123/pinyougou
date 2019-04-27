@@ -41,6 +41,11 @@ public class UserServiceImpl implements UserService {
     private String templateCode;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Value("${address.address}")
+    private String address;
+    @Value("${address.profession}")
+    private String profession;
+
 
     @Override
     public void save(User user) {
@@ -167,17 +172,17 @@ public class UserServiceImpl implements UserService {
             criteria.andEqualTo("username",user.getUsername());
 
             //判断数据库表是否存在用户地址字段
-            int row = userMapper.isExists("address");
+            int row = userMapper.isExists(address);
             if (row == 0){//表中没有该字段
                 //动态添加字段
-                userMapper.saveColumnName("address");
+                userMapper.saveColumnName(address);
             }
 
             //判断数据库表是否存在用户职业字段
-            int num = userMapper.isExists("profession");
+            int num = userMapper.isExists(profession);
             if (num == 0){//表中没有该字段
                 //动态添加字段
-                userMapper.saveColumnName("profession");
+                userMapper.saveColumnName(profession);
             }
             //执行修改,完善个人信息
             userMapper.updateByExampleSelective(user,example);

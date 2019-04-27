@@ -32,19 +32,26 @@ public class AddressController {
         return null;
     }
 
-    /** 新建用户地址 */
-    @PostMapping("/saveAddress")
-    public boolean saveAddress(@RequestBody Address address){
+    /** 新建Or修改用户地址 */
+    @PostMapping("/saveOrUpdateAddress")
+    public boolean saveOrUpdateAddress(@RequestBody Address address){
         try {
             //获取登录用户ID
             String userId =
                     SecurityContextHolder.getContext().getAuthentication().getName();
             //设置用户名
             address.setUserId(userId);
-            //设置新地址is_Default状态码为0(非默认)
-            address.setIsDefault("0");
-            //调用添加地址
-            addressService.save(address);
+            /** 判断前端传入的是添加还是修改方法 */
+            if(address.getIsDefault() != null){
+                //执行修改
+                addressService.update(address);
+            }else {
+                //执行添加
+                //设置新地址is_Default状态码为0(非默认)
+                address.setIsDefault("0");
+                //调用添加地址
+                addressService.save(address);
+            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -76,7 +83,11 @@ public class AddressController {
         return false;
     }
 
-
+    /**  根据ID查询地址数据回显 */
+    @GetMapping("/findOne")
+    public Address findOne(Long id){
+           return addressService.findOne(id);
+        }
 
 
 

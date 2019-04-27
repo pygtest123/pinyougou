@@ -21,12 +21,4 @@
 		alter table tb_user add ${columnName} varchar(3000) null;
 	</update>
 
-	<!-- 根据用户名修改个人信息 -->
-	<update id="updateByUserName">
-		update tb_user set
-		head_pic=#{headPic},nick_name=#{nickName},sex=#{sex},birthday=#{birthday},address=#{address},profession=#{profession}
-		where username=#{username}
-
-	</update>
-
 </mapper>

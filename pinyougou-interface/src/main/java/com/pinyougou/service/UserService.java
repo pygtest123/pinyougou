@@ -58,6 +58,11 @@ public interface UserService {
 	/** 根据父级cityId查询,得到区级分类名称 */
 	List<Areas> findAreaByCityId(Long cityId);
 
+	/** 发送短信验证码 */
+	boolean sendCode(String phone);
+
+	void updatePhone(String s, String s1);
+
 	/**　完善用户信息添加到tb_user表中　*/
     boolean savePersonToUser(User user);
 }

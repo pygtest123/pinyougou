@@ -81,7 +81,7 @@ public class ItemSearchServiceImpl implements ItemSearchService {
             // 获取页大小
             Integer rows = (Integer)params.get("rows");
             if (rows == null || rows < 1){
-                rows = 20;
+                rows = 5;
             }
 
 

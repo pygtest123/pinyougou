@@ -219,4 +219,51 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    /**
+     * 发送短信验证码
+     */
+    @Override
+    public boolean sendCode(String phone) {
+        try {
+            /** 生成6位随机数 */
+            String code = UUID.randomUUID().toString()
+                    .replaceAll("-", "")
+                    .replaceAll("[a-z|A-Z]","")
+                    .substring(0, 6);
+            System.out.println("验证码：" + code);
+            /** 调用短信发送接口 */
+            HttpClientUtils httpClientUtils = new HttpClientUtils(false);
+            // 创建Map集合封装请求参数
+            Map<String, String> param = new HashMap<>();
+            param.put("phone", phone);
+            param.put("signName", signName);
+            param.put("templateCode", templateCode);
+            param.put("templateParam", "{\"code\":\"" + code + "\"}");
+            // 发送Post请求
+            String content = httpClientUtils.sendPost(smsUrl, param);
+            // 把json字符串转化成Map  content  = {"success":true\false}
+            Map<String, Object> resMap = JSON.parseObject(content, Map.class);
+            /** 存入Redis中(90秒) */
+            redisTemplate.boundValueOps(phone).set(code, 90, TimeUnit.SECONDS);
+            return (boolean)resMap.get("success");
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public void updatePhone(String userName,String phone) {
+        try {
+            // 查询到用户对象
+            User user = new User();
+            user.setUsername(userName);
+            User user1 = userMapper.selectOne(user);
+            //修改手机号
+            user1.setPhone(phone);
+            userMapper.updateByPrimaryKeySelective(user1);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

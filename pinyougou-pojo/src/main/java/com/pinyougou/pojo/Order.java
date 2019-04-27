@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Table(name="tb_order")
 public class Order implements Serializable{
@@ -60,6 +61,12 @@ public class Order implements Serializable{
     private String sourceType;
 	@Column(name="seller_id")
     private String sellerId;
+	@Transient
+    private List<OrderItem> orderItems;
+	@Transient
+    private String nickName;
+    @Transient
+    private String telephone;
 	
     public Long getOrderId() {
         return orderId;
@@ -262,4 +269,15 @@ public class Order implements Serializable{
     }
 
 
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
 }

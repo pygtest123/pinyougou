@@ -10,11 +10,14 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
 /**
  * 用户控制器
+ *
+ * @author lee.siu.wah
  * @version 1.0
  * <p>File Created at 2019-04-15<p>
  */
@@ -119,8 +122,41 @@ public class UserController {
         } catch (Exception e){
           throw new RuntimeException(e);
         }
-
-
     }
 
+    @PostMapping("/sendMsg")
+    public boolean sendMsg(@RequestBody Map<String,String> phoneInfo,HttpServletRequest request){
+        // 1. 判断验证码
+        // 1.1 从Session中获取验证码
+        String oldCode = (String) request.getSession()
+                .getAttribute(VerifyController.VERIFY_CODE);
+        System.out.println("oldCode = " + oldCode);
+        if (phoneInfo.get("inputCode").equalsIgnoreCase(oldCode)) {
+            /** 发送验证码 */
+            boolean success = userService.sendCode(phoneInfo.get("phone"));
+            return success;
+        }else {
+            return false;
+        }
+    }
+
+    @PostMapping("/msgCodeVerify")
+    public boolean msgCodeVerify(@RequestBody Map<String,String> Info){
+        // 调用 用户服务层  进行 短信验证码验证
+        boolean success = userService.checkSmsCode(Info.get("phone"), Info.get("msgCode"));
+        return success;
+    }
+
+    @PostMapping("/newPhoneMsgCodeVerify")
+    public boolean newPhoneMsgCodeVerify(@RequestBody Map<String,String> Info){
+        // 调用 用户服务层  进行 短信验证码验证
+        boolean success = userService.checkSmsCode(Info.get("phone"), Info.get("msgCode"));
+        // 验证成功
+        if (success){
+            // 将新手机绑定到对应的用户中
+            userService.updatePhone(Info.get("userName"),Info.get("phone"));
+        }
+        return success;
+
+    }
 }

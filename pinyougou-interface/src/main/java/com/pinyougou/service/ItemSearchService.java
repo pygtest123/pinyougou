@@ -3,7 +3,8 @@ package com.pinyougou.service;
 import com.pinyougou.solr.SolrItem;
 
 import java.util.List;
-import java.util.Map; /**
+import java.util.Map;
+/**
  * 商品搜索服务接口
  *
  * @author lee.siu.wah

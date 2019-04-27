@@ -1,24 +1,32 @@
 package com.pinyougou.order.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.ISelect;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.pinyougou.cart.Cart;
 import com.pinyougou.common.pojo.PageResult;
 import com.pinyougou.common.util.IdWorker;
 import com.pinyougou.mapper.OrderItemMapper;
 import com.pinyougou.mapper.OrderMapper;
 import com.pinyougou.mapper.PayLogMapper;
+import com.pinyougou.mapper.SellerMapper;
 import com.pinyougou.pojo.Order;
 import com.pinyougou.pojo.OrderItem;
 import com.pinyougou.pojo.PayLog;
+import com.pinyougou.pojo.Seller;
 import com.pinyougou.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 订单服务接口实现类
@@ -41,6 +49,8 @@ public class OrderServiceImpl implements OrderService {
     private IdWorker idWorker;
     @Autowired
     private PayLogMapper payLogMapper;
+    @Autowired
+    private SellerMapper sellerMapper;
 
     @Override
     public void save(Order order) {
@@ -170,13 +180,28 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> findAll() {
+//        List<Order> as = new ArrayList<>();
+//        as =
+//        System.out.println(as);
+        Example example = new Example(Order.class);
+        Example.Criteria criteria = example.createCriteria();
+
+//        criteria.andEqualTo("sellerId",orderItem.getSellerId());
+//        criteria.andEqualTo("sellerId",seller.getSellerId());
+        List<Order> orders = orderMapper.selectByExample(example);
+        System.out.println(orders);
+//        select * from tb_order a inner join tb_order_item b inner join tb_seller c on a.seller_id = b.seller_id and a.order_id = b.order_id and a.seller_id = c.seller_id
+//        Order order = new Order();
+//        Example example1 = new Example(OrderItem.class);
+//        Example.Criteria criteria1 = example1.createCriteria();
+//        criteria1.andEqualTo("sellerId",order.getSellerId());
+
         return null;
     }
 
-    @Override
-    public PageResult findByPage(Order order, int page, int rows) {
 
-        return null;
+    public List<Order> findByPage(Order order, int page, int rows, String userId) {
+       return null;
     }
 
     /** 从Redis数据库中获取支付日志 */
@@ -222,5 +247,53 @@ public class OrderServiceImpl implements OrderService {
         }catch (Exception ex){
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public List<Order> findOrder(String userId) {
+        Example example = new Example(Order.class);
+        Example.Criteria criteria1 = example.createCriteria();
+        criteria1.andEqualTo("userId",userId);
+        List<Order> orders = orderMapper.selectByExample(example);
+        List<OrderItem> orderItems = new ArrayList<>();
+        List<Seller> sellers = new ArrayList<>();
+        for (Order order1 : orders) {
+            Example example1 = new Example(OrderItem.class);
+            Example.Criteria criteria = example1.createCriteria();
+//            order.setOrderId(Long.valueOf(orderId));
+            criteria.andEqualTo("sellerId",order1.getSellerId());
+            criteria.andEqualTo("orderId",order1.getOrderId());
+            orderItems = orderItemMapper.selectByExample(example1);
+            if (orderItems!=null && orderItems.size()>0){
+                order1.setOrderItems(orderItems);
+                String nickName = sellerMapper.selectByPrimaryKey(order1.getSellerId()).getNickName();
+                String telephone = sellerMapper.selectByPrimaryKey(order1.getSellerId()).getTelephone();
+                order1.setNickName(nickName);
+                order1.setTelephone(telephone);
+            }
+
+
+//            Example example2 = new Example(Seller.class);
+//            Example.Criteria criteria1 = example2.createCriteria();
+//            criteria1.andEqualTo("sellerId",order1.getSellerId());
+//            sellers = sellerMapper.selectByExample(example2);
+//            order1.setSellers(sellers);
+        }
+        return orders;
+    }
+
+    @Override
+    public PageResult findByPage(String userId, Map<String, Object> params) {
+        // 开始分页
+        Integer page =(Integer) params.get("page");
+        Integer rows =(Integer) params.get("rows");
+        PageInfo<Order> pageInfo = PageHelper.startPage(page, rows)
+                .doSelectPageInfo(new ISelect() {
+                    @Override
+                    public void doSelect() {
+                        List<Order> order = findOrder(userId);
+                    }
+                });
+        return new PageResult(pageInfo.getTotal(),pageInfo.getList());
     }
 }

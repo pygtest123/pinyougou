@@ -4,5 +4,15 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.pinyougou.mapper.AddressMapper">
+	<!-- 判断数据库表是否存在字段 -->
+	<select id="isExists" resultType="Integer" >
+		select count(*) from information_schema.columns where
+		table_name = 'tb_address' and column_name = #{columnName};
+	</select>
+
+	<!-- 添加字段 -->
+	<update id="saveColumnName">
+		alter table tb_address add ${columnName} varchar(255) null;
+	</update>
 
 </mapper>

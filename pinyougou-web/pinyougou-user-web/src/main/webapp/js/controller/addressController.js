@@ -70,16 +70,16 @@ app.controller('addressController', function($scope,baseService){
     };
 
         /** 新增用户地址 */
-    $scope.saveAddress = function () {
-          baseService.sendPost('/address/saveAddress', $scope.newAddress).then(
+    $scope.saveOrUpdateAddress = function () {
+          baseService.sendPost('/address/saveOrUpdateAddress', $scope.newAddress).then(
               function (response) {
               if(response.data){
-                  //清空
-                  $scope.newAddress ={};
+                  //清空文本框
+                  $scope.clearText();
                   //重新查询地址
                   $scope.findAll();
               }else {
-                  alert("成功失败!")
+                  alert("新增失败!")
               }
           })
         };
@@ -107,5 +107,18 @@ app.controller('addressController', function($scope,baseService){
           }
       })
     };
+
+    /** 编辑按钮事件,根据选中信息ID查询数据回显 */
+    $scope.findOne = function (id) {
+        baseService.sendGet('/address/findOne?id=' + id).then(function (response) {
+            $scope.newAddress = response.data;
+        });
+    };
+
+    /** 清空文本框方法 */
+    $scope.clearText = function () {
+        $scope.newAddress = {};
+    }
+
 
 });

@@ -5,6 +5,7 @@ import com.pinyougou.mapper.AddressMapper;
 import com.pinyougou.pojo.Address;
 import com.pinyougou.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
@@ -24,16 +25,18 @@ public class AddressServiceImpl implements AddressService {
 
     @Autowired
     private AddressMapper addressMapper;
+    @Value("${address.email}")
+    private String email;
 
     /** 新建用户地址 */
     @Override
     public void save(Address address) {
         try {
             //判断数据库表是否存在用户邮箱字段
-            int row = addressMapper.isExists("email");
+            int row = addressMapper.isExists(email);
             if (row == 0){//表中没有该字段
                 //动态添加字段
-                addressMapper.saveColumnName("email");
+                addressMapper.saveColumnName(email);
             }
             addressMapper.insertSelective(address);
         } catch (Exception e) {

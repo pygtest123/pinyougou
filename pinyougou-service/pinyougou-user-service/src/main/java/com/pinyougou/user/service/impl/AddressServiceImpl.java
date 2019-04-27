@@ -25,9 +25,14 @@ public class AddressServiceImpl implements AddressService {
     @Autowired
     private AddressMapper addressMapper;
 
+    /** 新建用户地址 */
     @Override
     public void save(Address address) {
-
+        try {
+            addressMapper.insertSelective(address);
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
     }
 
     @Override
@@ -35,9 +40,14 @@ public class AddressServiceImpl implements AddressService {
 
     }
 
+    /**  根据主键id删除地址  */
     @Override
     public void delete(Serializable id) {
-
+        try {
+            addressMapper.deleteByPrimaryKey(id);
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
     }
 
     @Override
@@ -50,9 +60,21 @@ public class AddressServiceImpl implements AddressService {
         return null;
     }
 
+    /** 根据登录用户名查询全部地址 */
     @Override
-    public List<Address> findAll() {
-        return null;
+    public List<Address> findAll(String userId) {
+        //创建条件对象
+        Example example = new Example(Address.class);
+        Example.Criteria criteria = example.createCriteria();
+
+        //创建查询条件,user_id = userId
+        criteria.andEqualTo("userId",userId);
+        //  ORDER BY is_default DESC
+        example.orderBy("isDefault").desc();
+
+        //查询并返回
+        return addressMapper.selectByExample(example);
+
     }
 
     @Override
@@ -76,6 +98,21 @@ public class AddressServiceImpl implements AddressService {
             return addressMapper.selectByExample(example);
         }catch (Exception ex){
             throw new RuntimeException(ex);
+        }
+    }
+
+    /**  修改默认地址(修改isDefault状态码) */
+    @Override
+    public void updateDefaultStatus(Long id) {
+        try {
+            //根据is_default状态码取消原来的默认地址改为:is_default = 0;
+            addressMapper.updateOldStatus();
+
+            /** 重新设置选中的ID项为默认地址 */
+            addressMapper.updateNewStatus(id);
+
+        } catch (Exception e) {
+            throw new RuntimeException();
         }
     }
 }

@@ -1,8 +1,14 @@
 package com.pinyougou.mapper;
 
+import com.pinyougou.pojo.Areas;
+import com.pinyougou.pojo.Cities;
+import com.pinyougou.pojo.Provinces;
+import com.pinyougou.pojo.User;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import tk.mybatis.mapper.common.Mapper;
 
-import com.pinyougou.pojo.User;
+import java.util.List;
 
 /**
  * UserMapper 数据访问接口
@@ -12,5 +18,21 @@ import com.pinyougou.pojo.User;
 public interface UserMapper extends Mapper<User>{
 
 
+    /** 查询省份信息 */
+    List<Provinces> findProvinces();
+
+    /** 根据父级ID查询城市名称 */
+    @Select("select * from tb_cities where  provinceId= #{parentId}")
+    List<Cities> findCityByParentId(Long parentId);
+
+    /** 根据父级cityId查询,得到区级分类名称 */
+    @Select("select * from tb_areas where cityId = #{cityId}")
+    List<Areas> findAreaByCityId(Long cityId);
+
+    /** 判断数据库表是否存在字段 */
+    int isExists(@Param("columnName") String columnName);
+
+    /** 添加字段 */
+    void saveColumnName(@Param("columnName") String columnName);
 
 }

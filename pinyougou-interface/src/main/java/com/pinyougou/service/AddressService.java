@@ -10,13 +10,13 @@ import java.io.Serializable;
  */
 public interface AddressService {
 
-	/** 添加方法 */
+	/** 新建用户地址 */
 	void save(Address address);
 
 	/** 修改方法 */
 	void update(Address address);
 
-	/** 根据主键id删除 */
+	/** 根据主键id删除地址 */
 	void delete(Serializable id);
 
 	/** 批量删除 */
@@ -25,13 +25,16 @@ public interface AddressService {
 	/** 根据主键id查询 */
 	Address findOne(Serializable id);
 
-	/** 查询全部 */
-	List<Address> findAll();
+	/** 根据登录用户名查询全部 */
+	List<Address> findAll(String userId);
 
 	/** 多条件分页查询 */
 	List<Address> findByPage(Address address, int page, int rows);
 
 	/** 根据登录用户名获取收件地址列表 */
     List<Address> findAddressByUser(String userId);
+
+	/**  修改默认地址(修改isDefault状态码) */
+	void updateDefaultStatus(Long id);
 
 }

@@ -4,5 +4,29 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.pinyougou.mapper.UserMapper">
+<!-- 初始化查询省份 -->
+	<select id="findProvinces" resultType="Provinces">
+		select province,provinceid from tb_provinces
+	</select>
+
+	<!-- 判断数据库表是否存在字段 -->
+	<select id="isExists" resultType="Integer" >
+	select count(*) from information_schema.columns where
+	table_name = 'tb_user' and column_name = #{columnName};
+	</select>
+
+
+	<!-- 添加字段 -->
+	<update id="saveColumnName">
+		alter table tb_user add ${columnName} varchar(3000) null;
+	</update>
+
+	<!-- 根据用户名修改个人信息 -->
+	<update id="updateByUserName">
+		update tb_user set
+		head_pic=#{headPic},nick_name=#{nickName},sex=#{sex},birthday=#{birthday},address=#{address},profession=#{profession}
+		where username=#{username}
+
+	</update>
 
 </mapper>

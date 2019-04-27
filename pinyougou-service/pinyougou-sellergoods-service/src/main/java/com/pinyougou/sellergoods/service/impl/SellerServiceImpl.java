@@ -44,7 +44,7 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public void update(Seller seller) {
-
+        sellerMapper.updateByPrimaryKey(seller);
     }
 
     @Override

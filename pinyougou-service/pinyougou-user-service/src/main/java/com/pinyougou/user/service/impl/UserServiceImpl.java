@@ -4,6 +4,9 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.pinyougou.common.util.HttpClientUtils;
 import com.pinyougou.mapper.UserMapper;
+import com.pinyougou.pojo.Areas;
+import com.pinyougou.pojo.Cities;
+import com.pinyougou.pojo.Provinces;
 import com.pinyougou.pojo.User;
 import com.pinyougou.service.UserService;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -11,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.io.Serializable;
 import java.util.*;
@@ -128,6 +132,91 @@ public class UserServiceImpl implements UserService {
         }catch (Exception ex){
             throw new RuntimeException(ex);
         }
+    }
+
+    /** 查询省份信息 */
+    public List<Provinces> findProvinces(){
+            return userMapper.findProvinces();
+    }
+
+    /** 根据省份ID查询城市名称 */
+    @Override
+    public List<Cities> findCityByParentId(Long parentId) {
+        try {
+           return userMapper.findCityByParentId(parentId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /** 根据父级cityId查询,得到区级分类名称 */
+    @Override
+    public List<Areas> findAreaByCityId(Long cityId) {
+        return userMapper.findAreaByCityId(cityId);
+    }
+
+    /**　完善用户信息添加到tb_user表中　*/
+    @Override
+    public boolean savePersonToUser(User user) {
+        try {
+            //创建条件对象
+            Example example = new Example(User.class);
+            Example.Criteria criteria = example.createCriteria();
+            //创建条件
+            criteria.andEqualTo("username",user.getUsername());
+
+            //判断数据库表是否存在用户地址字段
+            int row = userMapper.isExists("address");
+            if (row == 0){//表中没有该字段
+                //动态添加字段
+                userMapper.saveColumnName("address");
+            }
+
+            //判断数据库表是否存在用户职业字段
+            int num = userMapper.isExists("profession");
+            if (num == 0){//表中没有该字段
+                //动态添加字段
+                userMapper.saveColumnName("profession");
+            }
+            //执行修改,完善个人信息
+            userMapper.updateByExampleSelective(user,example);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    // 更新用户密码
+    @Override
+    public User updatePassword(String userName, String newPassword) {
+        try {
+            User user = new User();
+            user.setUsername(userName);
+            User user1 = userMapper.selectOne(user);
+
+            user1.setPassword(DigestUtils.md5Hex(newPassword));
+            userMapper.updateByPrimaryKeySelective(user1);
+
+            return user1;
+        } catch (Exception e){
+           throw  new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public User UserInfo(String userName) {
+        try {
+            User user = new User();
+            user.setUsername(userName);
+            return userMapper.selectOne(user);
+
+        } catch (Exception e){
+           throw new RuntimeException(e);
+        }
+
     }
 
 }
